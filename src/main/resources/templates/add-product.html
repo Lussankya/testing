@@ -9,48 +9,32 @@
 </head>
 <body>
 <div th:insert="fragments/topbar :: topbar"></div>
-
 <div class="container">
     <h2>Add Product</h2>
+    <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+    <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
     <form id="addForm" th:action="@{/products/add}" th:object="${product}" method="post">
         <div class="form-group">
-            <label for="name">Name: <span style="color: red;">*</span></label>
-            <input type="text" class="form-control" id="name" th:field="*{name}">
-            <span id="nameError" class="text-danger"></span>
+            <label for="name">Name:</label>
+            <input type="text" class="form-control" id="name" th:field="*{name}" required>
+            <div class="invalid-feedback" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</div>
         </div>
         <div class="form-group">
-            <label for="description">Description: <span style="color: red;">*</span></label>
-            <textarea class="form-control" id="description" th:field="*{description}"></textarea>
-            <span id="descriptionError" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <label for="price">Price: <span style="color: red;">*</span></label>
-            <input type="number" class="form-control" id="price" th:field="*{price}">
-            <span id="priceError" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <label for="stockQuantity">Stock Quantity: <span style="color: red;">*</span></label>
-            <input type="number" class="form-control" id="stockQuantity" th:field="*{stockQuantity}">
-            <span id="stockQuantityError" class="text-danger"></span>
+            <label for="description">Description:</label>
+            <textarea class="form-control" id="description" th:field="*{description}" required></textarea>
         </div>
         <div class="form-group">
             <label for="category">Category:</label>
-            <select class="form-control" id="category" th:field="*{category.id}">
+            <select class="form-control" id="category" th:field="*{category.id}" required>
+                <option value="">Choose...</option>
                 <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
             </select>
         </div>
-        <div class="form-group">
-            <label for="supplier">Supplier:</label>
-            <select class="form-control" id="supplier" th:field="*{supplier.id}">
-                <option th:each="supplier : ${suppliers}" th:value="${supplier.id}" th:text="${supplier.name}"></option>
-            </select>
-        </div>
-        <button type="button" class="btn btn-primary" onclick="validateForm()">Submit</button>
+        <button type="submit" class="btn btn-primary">Add Product</button>
     </form>
-    <div class="text-right"> <!-- Aligns content to the right -->
-        <a href="/products/option" class="btn btn-secondary">Return to Home</a>
+    <div class="text-right">
+        <a href="/products/index" class="btn btn-secondary">Return to Home</a>
     </div>
-
 </div>
 
 <!-- Include Bootstrap JS -->
@@ -58,59 +42,30 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script>
-    function validateForm() {
+    document.getElementById("addForm").addEventListener("submit", function(event) {
         var name = document.getElementById("name").value;
         var description = document.getElementById("description").value;
-        var price = document.getElementById("price").value;
-        var stockQuantity = document.getElementById("stockQuantity").value;
+        var category = document.getElementById("category").value;
 
-        // Reset error messages
-        document.getElementById("nameError").innerText = "";
-        document.getElementById("descriptionError").innerText = "";
-        document.getElementById("priceError").innerText = "";
-        document.getElementById("stockQuantityError").innerText = "";
+        // Clear previous validation errors
+        document.querySelectorAll('.is-invalid').forEach(function(element) {
+            element.classList.remove('is-invalid');
+        });
 
-        // Validation logic
-        var isValid = true;
-        if (name.trim() === "") {
-            document.getElementById("nameError").innerText = "Name is required";
-            isValid = false;
-        }
-        if (description.trim() === "") {
-            document.getElementById("descriptionError").innerText = "Description is required";
-            isValid = false;
+        // Basic validation
+        if (!name.trim() || !description.trim() || category === "") {
+            if (!name.trim()) document.getElementById("name").classList.add('is-invalid');
+            if (!description.trim()) document.getElementById("description").classList.add('is-invalid');
+            if (category === "") document.getElementById("category").classList.add('is-invalid');
+            event.preventDefault(); // Prevent form submission
+            return false;
         }
 
-
-        if (parseInt(price) <= 0) {
-            document.getElementById("priceError").innerText = "Price must be a number greater than zero";
-            isValid = false;
+        // Confirmation dialog
+        if (!confirm("Are you sure you want to add this product?")) {
+            event.preventDefault(); // Prevent form submission if user cancels
         }
-        if (parseInt(stockQuantity) <= 0) {
-            document.getElementById("stockQuantityError").innerText = "Stock quantity must be a number greater than zero";
-            isValid = false;
-        }
-        if (!/^-?\d+$/.test(price)) {
-            document.getElementById("priceError").innerText = "Price must be an integer";
-            isValid = false;
-        }
-        if (!/^-?\d+$/.test(stockQuantity)) {
-            document.getElementById("stockQuantityError").innerText = "Stock quantity must be an integer";
-            isValid = false;
-        }
-
-        if (isValid) {
-            if (confirm("Are you sure you want to add this product?")) {
-                document.getElementById("addForm").submit();
-            }
-        }
-    }
-
-
+    });
 </script>
-
-
-
-
 </body>
 </html>

@@ -1,7 +1,6 @@
 package com.example.testing.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Min;
 
 @Entity
 @Table(name = "product")
@@ -16,33 +15,18 @@ public class Product {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    @Column(nullable = false)
-
-    private int price;
-
-    @Column(name = "stock_quantity", nullable = false)
-
-    private int stockQuantity;
-
     @ManyToOne
-    @JoinColumn(name = "category_id")
+    @JoinColumn(name = "category_id", nullable = false)
     private Category category;
-
-    @ManyToOne
-    @JoinColumn(name = "supplier_id")
-    private Supplier supplier;
 
     public Product() {
     }
 
-    public Product(Long id, String name, String description, int price, int stockQuantity, Category category, Supplier supplier) {
+    public Product(Long id, String name, String description, Category category) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.price = price;
-        this.stockQuantity = stockQuantity;
         this.category = category;
-        this.supplier = supplier;
     }
 
     public Long getId() {
@@ -69,35 +53,11 @@ public class Product {
         this.description = description;
     }
 
-    public int getPrice() {
-        return price;
-    }
-
-    public void setPrice(int price) {
-        this.price = price;
-    }
-
-    public int getStockQuantity() {
-        return stockQuantity;
-    }
-
-    public void setStockQuantity(int stockQuantity) {
-        this.stockQuantity = stockQuantity;
-    }
-
     public Category getCategory() {
         return category;
     }
 
     public void setCategory(Category category) {
         this.category = category;
-    }
-
-    public Supplier getSupplier() {
-        return supplier;
-    }
-
-    public void setSupplier(Supplier supplier) {
-        this.supplier = supplier;
     }
 }

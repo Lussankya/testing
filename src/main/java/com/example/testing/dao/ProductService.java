@@ -1,26 +1,27 @@
 package com.example.testing.dao;
 
+import com.example.testing.dao.CategoryService;
+import com.example.testing.dao.ProductRepository;
 import com.example.testing.model.Category;
 import com.example.testing.model.Product;
-import com.example.testing.model.Supplier;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Service
 public class ProductService {
     private final ProductRepository productRepository;
-    private final CategoryRepository categoryRepository;
     private final CategoryService categoryService;
-    private final SupplierService supplierService;
+    private final CategoryRepository categoryRepository;
+
     @Autowired
-    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository, CategoryService categoryService, SupplierService supplierService) {
-        this.productRepository = productRepository;
+    public ProductService(ProductRepository productRepository, CategoryService categoryService,CategoryRepository categoryRepository) {
         this.categoryRepository = categoryRepository;
+        this.productRepository = productRepository;
         this.categoryService = categoryService;
-        this.supplierService = supplierService;
     }
 
     public List<Product> getAllProducts() {
@@ -30,80 +31,64 @@ public class ProductService {
     public Product getProductById(Long id) {
         return productRepository.findById(id).orElse(null);
     }
+
     public void addProduct(Product product) {
         Long categoryId = product.getCategory().getId();
-        Long supplierId = product.getSupplier().getId();
-        // Check if a product with the same name already exists for the given supplier and category
-        boolean productExists = productRepository.existsByNameAndSupplierAndCategory(
-                product.getName(), product.getSupplier(), product.getCategory());
+        Category category = categoryService.getCategoryById(categoryId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid category ID: " + categoryId));
 
-        // If the product with the same name already exists, you can handle the error or validation accordingly
+        // Check if a product with the same name already exists within the same category
+        boolean productExists = productRepository.existsByNameAndCategory(product.getName(), category);
+
+        // If the product with the same name already exists in the same category, handle it accordingly
         if (productExists) {
-            throw new IllegalArgumentException("A product with the same name already exists for the given supplier and category.");
+            throw new IllegalArgumentException("A product with the same name already exists in the given category.");
         }
 
-        // If the product does not exist, save it to the database
-
-        product.setCategory(categoryService.getCategoryById(categoryId));
-        product.setSupplier(supplierService.getSupplierById(supplierId));
-        productRepository.save(product);
+        product.setCategory(category); // Set the fetched category to the product
+        productRepository.save(product); // Save the new product
     }
+
     public List<Product> searchProductsByName(String query) {
         return productRepository.findByNameContainingIgnoreCase(query);
     }
+
     public void deleteProductById(Long productId) {
         productRepository.deleteById(productId);
     }
-    public String updateProduct(Long productId, Product product) {
-        // Retrieve existing product from the database
-        Product existingProduct = productRepository.findById(productId)
+
+    public String updateProduct(Long productId, Product productDetails) {
+        Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid product ID: " + productId));
 
-        // Check if price or stock quantity is less than 1
-        if (product.getPrice() < 1 || product.getStockQuantity() < 1) {
-            return "Price and Stock Quantity must be greater than or equal to 1.";
-        }
+        // Update product details
+        product.setName(productDetails.getName());
+        product.setDescription(productDetails.getDescription());
 
-        // Update existing product properties
-        existingProduct.setName(product.getName());
-        existingProduct.setDescription(product.getDescription());
-        existingProduct.setPrice(product.getPrice());
-        existingProduct.setStockQuantity(product.getStockQuantity());
-
-        // Retrieve the existing category from the database by name
-        Category existingCategory = categoryService.getCategoryByName(product.getCategory().getName());
-        if (existingCategory == null) {
-            // If the category does not exist, create a new one
-            existingCategory = new Category();
-            existingCategory.setName(product.getCategory().getName());
-            // Save the new category to get its ID
-            existingCategory = categoryService.saveCategory(existingCategory);
-        }
-        // Set the existing category to the product
-        existingProduct.setCategory(existingCategory);
-
-        // Retrieve the existing supplier from the database
-        Supplier existingSupplier = supplierService.getSupplierById(product.getSupplier().getId());
-        existingProduct.setSupplier(existingSupplier);
+        // Check if the category exists
+        Category category = categoryService.getCategoryById(productDetails.getCategory().getId())
+                .orElseThrow(() -> new IllegalArgumentException("Invalid category ID."));
+        product.setCategory(category);
 
         // Save the updated product
-        productRepository.save(existingProduct);
+        productRepository.save(product);
 
-        // Return null or empty string if update is successful
-        return "";
+        return "Product updated successfully.";
     }
 
+    public List<Category> getAllCategories() {
+        return categoryRepository.findAll();
+    }
 
+    public void saveProduct(Product product) {
+        productRepository.save(product);
+    }
 
     public boolean isDuplicateProduct(Product product) {
-        // Check if a product with the same name, category, and supplier already exists
-        return productRepository.existsByNameAndCategoryAndSupplier(product.getName(), product.getCategory(), product.getSupplier());
+        return productRepository.existsByNameAndCategory(product.getName(), product.getCategory());
     }
-    public List<Product> getProductsBySupplierIdAndName(Long supplierId, String productName) {
-        return productRepository.findBySupplierIdAndNameContainingIgnoreCase(supplierId, productName);
-    }
-    public void saveProduct(Product product) {
-        // Call the save method of ProductRepository
-        productRepository.save(product);
+    public boolean isDuplicateProductExceptCurrent(Product product, Long currentProductId) {
+        Product existingProduct = productRepository.findByNameAndCategoryId(product.getName(), product.getCategory().getId());
+        return existingProduct != null && !existingProduct.getId().equals(currentProductId);
     }
 }
