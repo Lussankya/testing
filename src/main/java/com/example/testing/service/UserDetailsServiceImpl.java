@@ -1,6 +1,6 @@
-package com.example.testing.dao;
+package com.example.testing.service;
 
-import com.example.testing.dao.UserRepository;
+import com.example.testing.repo.UserRepository;
 import com.example.testing.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;

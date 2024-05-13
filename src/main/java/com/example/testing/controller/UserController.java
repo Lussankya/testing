@@ -1,6 +1,6 @@
 package com.example.testing.controller;
 
-import com.example.testing.dao.UserService;
+import com.example.testing.service.UserService;
 import com.example.testing.model.User;
 
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,6 +1,7 @@
-package com.example.testing.dao;
+package com.example.testing.service;
 
 import com.example.testing.model.Supplier;
+import com.example.testing.repo.SupplierRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +28,9 @@ public class SupplierService {
     }
     public List<Supplier> searchSupplierByName(String name) {
         return supplierRepository.findByNameContainingIgnoreCase(name);
+    }
+    public boolean isSupplierNameExist(String name) {
+        return supplierRepository.findByName(name) != null;
     }
 
     public Supplier saveSupplier(Supplier supplier) {

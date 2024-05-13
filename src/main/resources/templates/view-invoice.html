@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Invoices</title>
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        .container {
+            margin-top: 50px;
+        }
+        .form-container {
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .table-container {
+            margin-top: 30px;
+        }
+        .btn-primary {
+            margin: 5px;
+        }
+        .invalid-feedback {
+            display: none; /* Hide by default */
+        }
+        h2 {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+<div th:replace="~{fragments/topbar :: topbar}"></div>
+<div class="container">
+    <h2 class="text-center">View Invoices</h2>
+    <div class="form-container">
+        <form id="searchInvoicesForm" th:action="@{/invoices/search}" method="get">
+            <div class="form-row">
+                <div class="col-md-6 mb-3">
+                    <label for="startDate">Start Date:</label>
+                    <input type="date" class="form-control" id="startDate" name="startDate" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="endDate">End Date:</label>
+                    <input type="date" class="form-control" id="endDate" name="endDate" required>
+                </div>
+            </div>
+            <div class="text-right">
+                <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i> Search</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="table-container">
+        <table class="table table-bordered mt-3">
+            <thead class="thead-light">
+            <tr>
+                <th>Invoice ID</th>
+                <th>Date</th>
+                <th class="text-right">Total Imported Products</th>
+                <th class="text-right">Total Import Cost</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody id="invoiceTableBody">
+            <!-- Invoice rows will be dynamically filled -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    function searchInvoices() {
+        const startDate = document.getElementById('startDate').value;
+        const endDate = document.getElementById('endDate').value;
+
+        // Perform AJAX request to search for invoices
+        $.ajax({
+            url: '/invoices/search',
+            type: 'GET',
+            data: {
+                startDate: startDate,
+                endDate: endDate
+            },
+            success: function(data) {
+                $('#invoiceTableBody').empty();
+                if (data.length === 0) {
+                    $('#invoiceTableBody').append('<tr><td colspan="5" class="text-center">No invoices found.</td></tr>');
+                } else {
+                    data.forEach(invoice => {
+                        $('#invoiceTableBody').append(`
+                            <tr>
+                                <td>${invoice.id}</td>
+                                <td>${new Date(invoice.importDate).toLocaleDateString()}</td>
+                                <td class="text-right">${invoice.totalImportedProducts}</td>
+                                <td class="text-right">${invoice.totalImportCost}</td>
+                                <td>
+                                    <a href="/invoices/view/${invoice.id}" class="btn btn-info"><i class="fas fa-eye"></i> View Details</a>
+                                </td>
+                            </tr>
+                        `);
+                    });
+                }
+            },
+            error: function() {
+                alert('Failed to fetch invoices. Please try again.');
+            }
+        });
+    }
+
+    // Attach search function to form submit
+    document.getElementById('searchInvoicesForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        searchInvoices();
+    });
+</script>
+</body>
+</html>

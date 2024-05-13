@@ -32,7 +32,7 @@ public class SecurityConfig {
                         .loginProcessingUrl("/login") // Process login requests through POST /login
                         .usernameParameter("username") // Username parameter name in the login form
                         .passwordParameter("password") // Password parameter name in the login form
-                        .defaultSuccessUrl("/products/option", true) // Redirect to the home page on successful login
+                        .defaultSuccessUrl("/products/index", true) // Redirect to the home page on successful login
                         .failureUrl("/login?error=true") // Redirect to the login page on failure
                 )
                 .logout(logout -> logout

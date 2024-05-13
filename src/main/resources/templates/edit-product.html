@@ -6,38 +6,63 @@
     <title>Edit Product</title>
     <!-- Include Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        .container {
+            margin-top: 50px;
+        }
+        h2 {
+            margin-bottom: 30px;
+        }
+        .error-message {
+            color: #dc3545;
+            font-size: 0.875rem;
+            margin-top: 5px;
+        }
+        .form-container {
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .btn-primary, .btn-secondary {
+            margin: 5px;
+        }
+    </style>
 </head>
 <body>
 <div th:insert="fragments/topbar :: topbar"></div>
 
 <div class="container">
-    <h2>Edit Product</h2>
-    <form id="editForm" th:action="@{'/products/edit/' + ${product.id}}" th:object="${product}" method="post">
-        <input type="hidden" th:field="*{id}"/>
+    <h2 class="text-center">Edit Product</h2>
+    <div class="form-container">
+        <form id="editForm" th:action="@{'/products/edit/' + ${product.id}}" th:object="${product}" method="post">
+            <input type="hidden" th:field="*{id}"/>
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" class="form-control" id="name" th:field="*{name}" required>
+                <div id="nameError" class="error-message" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name is required</div>
+            </div>
 
-        <div class="form-group">
-            <label for="name">Name:</label>
-            <input type="text" class="form-control" id="name" th:field="*{name}" required>
-            <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="alert alert-danger">Error</div>
-        </div>
+            <div class="form-group">
+                <label for="description">Description:</label>
+                <textarea class="form-control" id="description" th:field="*{description}" required></textarea>
+                <div id="descriptionError" class="error-message" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Description is required</div>
+            </div>
 
-        <div class="form-group">
-            <label for="description">Description:</label>
-            <textarea class="form-control" id="description" th:field="*{description}" required></textarea>
-        </div>
+            <div class="form-group">
+                <label for="category">Category:</label>
+                <select class="form-control" id="category" th:field="*{category.id}" required>
+                    <option value="">Choose...</option>
+                    <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
+                </select>
+            </div>
 
-        <div class="form-group">
-            <label for="category">Category:</label>
-            <select class="form-control" id="category" th:field="*{category.id}" required>
-                <option value="">Choose...</option>
-                <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
-            </select>
-        </div>
-
-        <button type="submit" class="btn btn-primary">Update</button>
-    </form>
-    <div class="text-right">
-        <a href="/products/index" class="btn btn-secondary">Return to Home</a>
+            <div class="text-right">
+                <button type="button" id="updateButton" class="btn btn-primary"><i class="fas fa-save"></i> Update</button>
+                <a href="/products/index" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Return to Home</a>
+            </div>
+        </form>
     </div>
 </div>
 
@@ -46,28 +71,27 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script>
-    document.getElementById("editForm").addEventListener("submit", function(event) {
-        var isValid = true;
-        var name = document.getElementById("name").value;
-        var description = document.getElementById("description").value;
+    $(document).ready(function() {
+        var formChanged = false;
 
-        // Reset error messages
-        document.getElementById("nameError").innerText = "";
-        document.getElementById("descriptionError").innerText = "";
+        // Listen for changes in the form fields
+        $('#editForm input, #editForm textarea, #editForm select').change(function() {
+            formChanged = true;
+        });
 
-        // Validation logic
-        if (name.trim() === "") {
-            document.getElementById("nameError").innerText = "Name is required";
-            isValid = false;
-        }
-        if (description.trim() === "") {
-            document.getElementById("descriptionError").innerText = "Description is required";
-            isValid = false;
-        }
+        // Show confirmation dialog if form is changed and user tries to leave the page
+        window.onbeforeunload = function() {
+            if (formChanged) {
+                return "You have unsaved changes. Are you sure you want to leave this page?";
+            }
+        };
 
-        if (!isValid) {
-            event.preventDefault(); // Prevent form submission if validation fails
-        }
+        // Handle form submission
+        $('#updateButton').click(function() {
+            if (confirm("Are you sure you want to update this product?")) {
+                $('#editForm').submit();
+            }
+        });
     });
 </script>
 </body>

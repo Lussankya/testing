@@ -7,31 +7,54 @@
     <title>Application Title</title>
     <!-- Include Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
         /* Custom styles for top bar */
         .navbar {
-            background-color: #343a40; /* Dark background color */
+            background-color: #f8f9fa; /* Light background color */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Adding a subtle shadow */
         }
         .navbar-brand {
-            color: #ffffff; /* White text color */
+            color: #007bff; /* Primary color for brand */
+            font-weight: bold; /* Making the text bold */
+            font-size: 1.5em; /* Larger font size */
         }
         .navbar-brand:hover {
-            color: #ffffff; /* White text color on hover */
+            color: #0056b3; /* Darkening the color on hover */
         }
         .navbar-nav .nav-link {
-            color: #ffffff; /* White text color */
+            color: #000000; /* Black text color */
+            font-size: 1.1em; /* Slightly larger font size */
+            padding: 0.5em 1em; /* Adding padding */
         }
         .navbar-nav .nav-link:hover {
-            color: #ffffff; /* White text color on hover */
+            color: #0056b3; /* Darkening the color on hover */
+        }
+        .navbar-toggler {
+            border: none; /* Removing border */
+            color: #007bff; /* Primary color for toggler */
+        }
+        .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'><path stroke='rgba%280, 123, 255, 1%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/></svg>");
+        }
+        .btn-link {
+            color: #007bff; /* Primary color for button */
+            font-size: 1.1em; /* Slightly larger font size */
+            text-decoration: none; /* Removing underline */
+        }
+        .btn-link:hover {
+            color: #0056b3; /* Darkening the color on hover */
         }
     </style>
 </head>
 <body>
 <div th:fragment="topbar">
     <!-- Top bar for authenticated users -->
-    <nav class="navbar navbar-expand-lg navbar-dark">
+    <nav class="navbar navbar-expand-lg navbar-light">
         <div class="container">
-            <a class="navbar-brand" href="/products/option">Home</a>
+            <a class="navbar-brand" href="/products/index">
+                <i class="fas fa-home"></i> Home
+            </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
                     aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -40,7 +63,7 @@
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item">
                         <form th:action="@{/logout}" method="post" class="nav-link">
-                            <input type="submit" value="Logout" class="btn btn-outline-light">
+                            <input type="submit" value="Logout" class="btn btn-link">
                         </form>
                     </li>
                 </ul>
@@ -50,5 +73,9 @@
 </div>
 <!-- Main content here -->
 
+<!-- Include Bootstrap JS and FontAwesome -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Cart</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        .container {
+            margin-top: 50px;
+        }
+        .card {
+            margin-bottom: 20px;
+        }
+        .table thead th {
+            background-color: #f8f9fa;
+        }
+        .btn-primary, .btn-danger {
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+<div th:insert="/fragments/topbar :: topbar"></div>
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <h2>Cart Items</h2>
+        </div>
+        <div class="card-body">
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Supplier</th>
+                    <th class="text-right">Quantity</th>
+                    <th class="text-right">Price</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="item : ${cartItems}">
+                    <td th:text="${item.productId.name}"></td>
+                    <td th:text="${item.supplierId.name}"></td>
+                    <td th:text="${item.quantity}" class="text-right"></td>
+                    <td th:text="${item.price}" class="text-right"></td>
+                    <td>
+                        <form th:action="@{/cart/remove/{id}(id=${item.id})}" method="post">
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fas fa-trash-alt"></i> Remove
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <div class="text-right">
+                <a href="/cart/finalize" class="btn btn-primary">
+                    <i class="fas fa-check"></i> Finalize Cart
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="text-right">
+        <a href="/suppliers/search-page" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Return to Import Product
+        </a>
+    </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

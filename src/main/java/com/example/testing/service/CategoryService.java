@@ -1,6 +1,7 @@
-package com.example.testing.dao;
+package com.example.testing.service;
 
 import com.example.testing.model.Category;
+import com.example.testing.repo.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

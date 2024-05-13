@@ -1,15 +1,14 @@
-package com.example.testing.dao;
+package com.example.testing.service;
 
-import com.example.testing.dao.CategoryService;
-import com.example.testing.dao.ProductRepository;
 import com.example.testing.model.Category;
 import com.example.testing.model.Product;
 
+import com.example.testing.repo.CategoryRepository;
+import com.example.testing.repo.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ProductService {

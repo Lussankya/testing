@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Options</title>
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        /* Custom styles for the options */
+        body {
+            background-color: #f8f9fa; /* Light gray background */
+        }
+        .container {
+            margin-top: 50px;
+        }
+        .option-card {
+            background-color: #ffffff;
+            border: 1px solid #ced4da;
+            border-radius: 8px;
+            box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+            transition: box-shadow 0.3s ease;
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        .option-card:hover {
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        .option-card a {
+            text-decoration: none;
+            color: #212529;
+        }
+        .option-card .card-body {
+            padding: 20px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .option-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: #007bff;
+        }
+        .btn-uniform {
+            background-color: #007bff;
+            color: #ffffff;
+            margin-top: auto;
+            border: none;
+        }
+        .btn-uniform:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+<div th:replace="~{fragments/topbar :: topbar}"></div>
+
+<div class="container">
+    <h2 class="text-center mb-5">Product Management System</h2>
+    <div class="d-flex flex-wrap justify-content-center">
+        <div class="col-md-3 d-flex">
+            <div class="option-card flex-fill">
+                <div class="card-body">
+                    <i class="fas fa-plus-square option-icon"></i>
+                    <h5 class="card-title">Add a Product</h5>
+                    <p class="card-text">Add a new product to the inventory.</p>
+                    <a href="/products/add" class="btn btn-uniform" style="color: white">Go</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 d-flex">
+            <div class="option-card flex-fill">
+                <div class="card-body">
+                    <i class="fas fa-edit option-icon"></i>
+                    <h5 class="card-title">Edit/Delete a Product</h5>
+                    <p class="card-text">Edit or delete existing products.</p>
+                    <a href="/products/search-page" class="btn btn-uniform"  style="color: white">Go</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 d-flex">
+            <div class="option-card flex-fill">
+                <div class="card-body">
+                    <i class="fas fa-truck option-icon"></i>
+                    <h5 class="card-title">Import a Product</h5>
+                    <p class="card-text">Import products from suppliers.</p>
+                    <a href="/suppliers/search-page" class="btn btn-uniform"  style="color: white">Go</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 d-flex">
+            <div class="option-card flex-fill">
+                <div class="card-body">
+                    <i class="fas fa-file-invoice option-icon"></i>
+                    <h5 class="card-title">View Invoices</h5>
+                    <p class="card-text">View all import invoices.</p>
+                    <a href="/invoices/view-page" class="btn btn-uniform" style="color: white">Go</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Include Bootstrap JS -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>

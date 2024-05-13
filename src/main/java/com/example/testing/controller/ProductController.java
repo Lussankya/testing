@@ -1,16 +1,16 @@
 package com.example.testing.controller;
 
-import com.example.testing.dao.*;
+import com.example.testing.service.*;
 import com.example.testing.model.Category;
 import com.example.testing.model.Product;
-import com.example.testing.model.Supplier;
+import com.example.testing.repo.CategoryRepository;
+import com.example.testing.repo.ProductRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
@@ -71,12 +71,18 @@ public class ProductController {
     }
     @GetMapping("/index")
     public String showMainPage() {
-        return "options";
+        return "index";
+    }
+
+    @GetMapping("/search-product")
+    public String searchProductPage(@RequestParam(required = false) Long supplierId, Model model) {
+        model.addAttribute("supplierId", supplierId);  // Pass the supplier ID to the view
+        return "product-search-to-cart";  // Name of the HTML file
     }
 
     @GetMapping("/search-page")
     public String showSearchProductPage() {
-        return "search";
+        return "search-product";
     }
 
     @PostMapping("/search")
@@ -134,7 +140,11 @@ public class ProductController {
         existingProduct.setCategory(category);
 
         productRepository.save(existingProduct);
-        return "redirect:/products/index";
+        return "redirect:/products/edit-success";
+    }
+    @GetMapping("/edit-success")
+    public String editProductSuccess() {
+        return "edit-product-success"; // This is a new template that will show the success message and handle the redirect
     }
 
 
