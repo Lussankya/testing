@@ -1,6 +1,8 @@
 package com.example.testing.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "product")
@@ -9,12 +11,15 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Product name is required")
     @Column(nullable = false)
     private String name;
 
+    @NotBlank(message = "Description is required")
     @Column(columnDefinition = "TEXT")
     private String description;
 
+    @NotNull(message = "Category is required")
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;

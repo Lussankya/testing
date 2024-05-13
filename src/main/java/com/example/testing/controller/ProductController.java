@@ -1,16 +1,18 @@
 package com.example.testing.controller;
 
-import com.example.testing.service.*;
 import com.example.testing.model.Category;
 import com.example.testing.model.Product;
+import com.example.testing.service.CategoryService;
+import com.example.testing.service.ProductService;
+import com.example.testing.service.SupplierService;
 import com.example.testing.repo.CategoryRepository;
 import com.example.testing.repo.ProductRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
@@ -59,16 +61,12 @@ public class ProductController {
             return "add-product"; // Stay on the add page and show the error
         }
     }
+
     @GetMapping("/add-success")
     public String addProductSuccess() {
         return "add-product-success"; // This is a new template that will show the success message and handle the redirect
     }
 
-    @GetMapping("/list")
-    public String showProductList(Model model) {
-        model.addAttribute("products", productService.getAllProducts());
-        return "product-list";
-    }
     @GetMapping("/index")
     public String showMainPage() {
         return "index";
@@ -142,14 +140,9 @@ public class ProductController {
         productRepository.save(existingProduct);
         return "redirect:/products/edit-success";
     }
+
     @GetMapping("/edit-success")
     public String editProductSuccess() {
         return "edit-product-success"; // This is a new template that will show the success message and handle the redirect
     }
-
-
-
-
-
-
 }

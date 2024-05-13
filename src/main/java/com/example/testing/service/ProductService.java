@@ -56,36 +56,6 @@ public class ProductService {
         productRepository.deleteById(productId);
     }
 
-    public String updateProduct(Long productId, Product productDetails) {
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid product ID: " + productId));
-
-        // Update product details
-        product.setName(productDetails.getName());
-        product.setDescription(productDetails.getDescription());
-
-        // Check if the category exists
-        Category category = categoryService.getCategoryById(productDetails.getCategory().getId())
-                .orElseThrow(() -> new IllegalArgumentException("Invalid category ID."));
-        product.setCategory(category);
-
-        // Save the updated product
-        productRepository.save(product);
-
-        return "Product updated successfully.";
-    }
-
-    public List<Category> getAllCategories() {
-        return categoryRepository.findAll();
-    }
-
-    public void saveProduct(Product product) {
-        productRepository.save(product);
-    }
-
-    public boolean isDuplicateProduct(Product product) {
-        return productRepository.existsByNameAndCategory(product.getName(), product.getCategory());
-    }
     public boolean isDuplicateProductExceptCurrent(Product product, Long currentProductId) {
         Product existingProduct = productRepository.findByNameAndCategoryId(product.getName(), product.getCategory().getId());
         return existingProduct != null && !existingProduct.getId().equals(currentProductId);
