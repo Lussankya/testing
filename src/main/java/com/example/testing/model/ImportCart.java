@@ -1,7 +1,8 @@
 package com.example.testing.model;
 
-
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "import_cart")
@@ -12,17 +13,28 @@ public class ImportCart {
 
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
+    @NotNull(message = "Product must not be null")
     private Product productId;
 
     @ManyToOne
     @JoinColumn(name = "supplier_id", nullable = false)
+    @NotNull(message = "Supplier must not be null")
     private Supplier supplierId;
 
     @Column(nullable = false)
+    @NotNull(message = "Quantity must not be null")
+    @Min(value = 1, message = "Quantity must be positive and whole number")
     private Integer quantity;
 
     @Column(nullable = false)
+    @NotNull(message = "Price must not be null")
+    @Min(value = 1, message = "Price must be positive and whole number")
     private Integer price;
+
+    // Constructors, getters, setters
+
+    public ImportCart() {
+    }
 
     public ImportCart(Long id, Product productId, Supplier supplierId, Integer quantity, Integer price) {
         this.id = id;
@@ -30,9 +42,6 @@ public class ImportCart {
         this.supplierId = supplierId;
         this.quantity = quantity;
         this.price = price;
-    }
-
-    public ImportCart() {
     }
 
     public Long getId() {
@@ -74,13 +83,4 @@ public class ImportCart {
     public void setPrice(Integer price) {
         this.price = price;
     }
-
-    public Product getProduct() {
-    return productId;
 }
-
-    public Supplier getSupplier() {
-        return supplierId;
-    }
-}
-

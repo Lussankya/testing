@@ -21,8 +21,5 @@ public class ImportInvoiceService {
         return importInvoiceRepository.findByImportDateBetween(startDate, endDate);
     }
 
-    public ImportInvoice findInvoiceById(Long id) {
-        return importInvoiceRepository.findById(id).orElse(null);
-    }
 }
 

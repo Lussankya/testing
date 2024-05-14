@@ -1,15 +1,15 @@
 package com.example.testing.controller;
 
-
+import com.example.testing.model.ImportCart;
 import com.example.testing.repo.ImportCartRepository;
 import com.example.testing.service.ImportCartService;
-import com.example.testing.model.ImportCart;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -26,27 +26,25 @@ public class ImportCartController {
     }
 
     @PostMapping("/add")
-    public String addToCart(@RequestParam("productId") Long productId,
-                            @RequestParam("supplierId") Long supplierId,
-                            @RequestParam("quantity") Integer quantity,
-                            @RequestParam("price") Integer price,
-                            RedirectAttributes redirectAttributes) {
+    public String addToCart(@Valid @ModelAttribute("importCart") ImportCart importCart,
+                            BindingResult bindingResult,
+                            Model model) {
+
+        if (bindingResult.hasErrors()) {
+            return "view-cart"; // Return to the form with validation errors
+        }
 
         try {
-            // Validating the input
-            if (quantity <= 0 || price <= 0) {
-                throw new IllegalArgumentException("Quantity and price must be positive numbers.");
-            }
-
             // Adding the product to the cart
-            importCartService.addToCart(productId, supplierId, quantity, price);
-            redirectAttributes.addFlashAttribute("successMessage", "Product added to cart successfully!");
-            return "redirect:/cart/view"; // Redirect to view cart page
+            importCartService.addToCart(importCart.getProductId().getId(), importCart.getSupplierId().getId(), importCart.getQuantity(), importCart.getPrice());
+            model.addAttribute("successMessage", "Product added to cart successfully!");
+            return "redirect:/cart/view";
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Error adding product to cart: " + e.getMessage());
-            return e.getMessage(); // Stay on the current page and show error
+            model.addAttribute("errorMessage", "Error adding product to cart: " + e.getMessage());
+            return "product-search-to-cart"; // Stay on the current page and show error
         }
     }
+
     @GetMapping("/view")
     public String viewCart(Model model) {
         List<ImportCart> cartItems = importCartService.getAllCartItems();
@@ -54,8 +52,9 @@ public class ImportCartController {
 
         return "view-cart"; // the name of the HTML file
     }
+
     @PostMapping("/remove/{id}")
-    public ModelAndView removeItemFromCart(@PathVariable("id") Long cartItemId) {
+    public ModelAndView removeItemFromCart(@PathVariable("id") Long cartItemId, Model model) {
         try {
             importCartRepository.deleteById(cartItemId);
             return new ModelAndView("redirect:/cart/view");  // Redirect back to the cart page to see the updated list
@@ -65,5 +64,4 @@ public class ImportCartController {
             return modelAndView;
         }
     }
-
 }

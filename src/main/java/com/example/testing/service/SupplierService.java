@@ -16,15 +16,8 @@ public class SupplierService {
         this.supplierRepository = supplierRepository;
     }
 
-    public List<Supplier> getAllSuppliers() {
-        return supplierRepository.findAll();
-    }
-
     public Supplier getSupplierById(Long id) {
         return supplierRepository.findById(id).orElse(null);
-    }
-    public Supplier getSupplierByName(String name) {
-        return supplierRepository.findByName(name);
     }
     public List<Supplier> searchSupplierByName(String name) {
         return supplierRepository.findByNameContainingIgnoreCase(name);
@@ -32,7 +25,6 @@ public class SupplierService {
     public boolean isSupplierNameExist(String name) {
         return supplierRepository.findByName(name) != null;
     }
-
     public Supplier saveSupplier(Supplier supplier) {
         return supplierRepository.save(supplier);
     }

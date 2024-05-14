@@ -45,18 +45,8 @@ public class UserService {
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
     }
-    // Example method to find a user by username
-    public Optional<User> findByUsername(String username) {
-        return userRepository.findByUsername(username);
-    }
 
-    // Correctly handle Optional<User> in other methods
-    // Assuming you have a method that requires dealing with User directly but gets Optional<User>
-    public User getUserByUsername(String username) throws Exception {
-        // Use orElseThrow to extract the User from Optional<User> or throw an exception if not found
-        return findByUsername(username)
-                .orElseThrow(() -> new Exception("User not found with username: " + username));
-    }
+
 
 
 }

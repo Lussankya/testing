@@ -10,7 +10,7 @@ import java.util.List;
 
 @Repository
 public interface ImportDetailRepository extends JpaRepository<ImportDetail, Long> {
-    // Here, you can define any additional methods you might need.
+
     List<ImportDetail> findAllByInvoice(ImportInvoice invoice);
 }
 

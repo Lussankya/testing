@@ -27,7 +27,6 @@ public class ImportCartService {
     public void addToCart( Long productId, Long supplierId,Integer quantity, Integer price) {
         Product product = productService.getProductById(productId);  // Ensure this method fetches the product
         Supplier supplier = supplierService.getSupplierById(supplierId); // Ensure this method fetches the supplier
-
         ImportCart importCart = new ImportCart();
         importCart.setProductId(product);
         importCart.setSupplierId(supplier);

@@ -1,6 +1,10 @@
 package com.example.testing.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "supplier")
@@ -9,14 +13,25 @@ public class Supplier {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Supplier name must not be empty")
+    @Size(max = 255, message = "Supplier name must be <= 255 characters")
     @Column(nullable = false)
     private String name;
 
-    @Column(name = "contact_person")
+    @NotBlank(message = "Contact person must not be empty")
+    @Size(max = 255, message = "Contact person must be <= 255 characters")
+    @Column(name = "contact_person", nullable = false)
     private String contactPerson;
 
+    @NotBlank(message = "Phone number must not be empty")
+    @Pattern(regexp = "\\d{10}", message = "Phone number must be exactly 10 digits")
+    @Column(nullable = false)
     private String phone;
 
+    @NotBlank(message = "Email must not be empty")
+    @Email(message = "Email should be valid")
+    @Size(max = 255, message = "Email must be <= 255 characters")
+    @Column(nullable = false)
     private String email;
 
     public Supplier() {

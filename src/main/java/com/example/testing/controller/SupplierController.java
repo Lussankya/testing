@@ -1,11 +1,14 @@
 package com.example.testing.controller;
 
-import com.example.testing.service.SupplierService;
 import com.example.testing.model.Supplier;
+import com.example.testing.service.SupplierService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+
+import jakarta.validation.Valid;
 import java.util.List;
 
 @Controller
@@ -30,6 +33,7 @@ public class SupplierController {
         model.addAttribute("suppliers", suppliers);
         return "search-suppliers";
     }
+
     @GetMapping("/add")
     public String showAddSupplierForm(Model model) {
         model.addAttribute("supplier", new Supplier());
@@ -37,18 +41,18 @@ public class SupplierController {
     }
 
     @PostMapping("/add")
-    public String addSupplier(@ModelAttribute Supplier supplier, Model model) {
-        if (supplierService.isSupplierNameExist(supplier.getName())) {
-            model.addAttribute("errorMessage", "Supplier name already exists!");
+    public String addSupplier(@Valid @ModelAttribute Supplier supplier, BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
             return "add-supplier";
         }
-        if (supplier.getPhone().length() != 10 || !supplier.getPhone().matches("\\d{10}")) {
-            model.addAttribute("errorMessage", "Phone number must be exactly 10 digits!");
+        if (supplierService.isSupplierNameExist(supplier.getName())) {
+            model.addAttribute("errorMessage", "Supplier name already exists!");
+            bindingResult.rejectValue("name", "duplicate", "Supplier name already exists!");
             return "add-supplier";
         }
         supplierService.saveSupplier(supplier);
         model.addAttribute("successMessage", "Supplier added successfully!");
         return "add-supplier-success";
     }
-}
 
+}

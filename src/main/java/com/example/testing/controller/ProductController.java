@@ -9,6 +9,7 @@ import com.example.testing.repo.CategoryRepository;
 import com.example.testing.repo.ProductRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -92,9 +93,15 @@ public class ProductController {
 
     @PostMapping("/delete/{productId}")
     @ResponseBody
-    public String deleteProduct(@PathVariable Long productId) {
-        productService.deleteProductById(productId);
-        return "Product deleted successfully";
+    public ResponseEntity<String> deleteProduct(@PathVariable Long productId) {
+        try {
+            productService.deleteProductById(productId);
+            return ResponseEntity.ok("Product deleted successfully");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Database error");
+        }
     }
 
     @GetMapping("/edit/{productId}")

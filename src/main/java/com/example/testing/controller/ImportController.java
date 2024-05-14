@@ -12,12 +12,10 @@ import com.example.testing.repo.ImportInvoiceRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Date;
@@ -94,6 +92,13 @@ public class ImportController {
     @GetMapping("/invoices/view-page")
     public String showSearchInvoice () {
         return "view-invoice";
+    }
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ModelAndView handleIllegalArgumentException(IllegalArgumentException e) {
+        ModelAndView mav = new ModelAndView("error");
+        mav.addObject("message", e.getMessage());
+        return mav;
     }
 }
 
