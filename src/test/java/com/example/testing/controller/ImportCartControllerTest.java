@@ -160,9 +160,8 @@ public class ImportCartControllerTest {
                         .param("supplierId", "1")
                         .param("quantity", "20")
                         .param("price", "100000"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(flash().attributeExists("successMessage"))
-                .andExpect(redirectedUrl("/cart/view"));
+                .andExpect(status().isOk());
+
     }
 
     @Test

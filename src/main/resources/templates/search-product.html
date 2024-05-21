@@ -40,7 +40,7 @@
         <div class="input-group mb-3">
             <input type="text" class="form-control" id="searchInput" placeholder="Enter product name" style="margin-top: 5px">
             <div class="input-group-append">
-                <button class="btn btn-primary btn-search" onclick="searchProducts()"><i class="fas fa-search" ></i> Search</button>
+                <button class="btn btn-primary btn-search" onclick="searchProducts()"><i class="fas fa-search"></i> Search</button>
             </div>
         </div>
     </div>
@@ -123,7 +123,11 @@
                 searchProducts(); // Refresh the list of products
             },
             error: function(xhr, status, error) {
-                alert("Error deleting product. Please try again later."); // Show error message
+                if (xhr.status === 409) { // Conflict
+                    alert(xhr.responseText); // Show specific error message
+                } else {
+                    alert("Error deleting product. Please try again later."); // Show generic error message
+                }
             }
         });
     }

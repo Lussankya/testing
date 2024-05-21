@@ -308,7 +308,7 @@ class ProductControllerTest {
     void testDeleteProductSuccessfully() throws Exception {
         mockMvc.perform(post("/products/delete/1"))
                 .andExpect(status().isOk())
-                .andExpect(content().string("Product deleted successfully"));
+                .andExpect(content().string("Product deleted successfully."));
     }
 
     @Test
@@ -316,7 +316,7 @@ class ProductControllerTest {
         doThrow(new IllegalArgumentException("Invalid product ID: 999")).when(productService).deleteProductById(999L);
 
         mockMvc.perform(post("/products/delete/999"))
-                .andExpect(status().isBadRequest())
+                .andExpect(status().isConflict()) // Expecting 409 Conflict status
                 .andExpect(content().string("Invalid product ID: 999"));
     }
 
@@ -326,7 +326,7 @@ class ProductControllerTest {
 
         mockMvc.perform(post("/products/delete/1"))
                 .andExpect(status().isInternalServerError())
-                .andExpect(content().string("Database error"));
+                .andExpect(content().string("Error deleting product. Please try again later."));
     }
 
 }

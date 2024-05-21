@@ -6,5 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ImportCartRepository extends JpaRepository<ImportCart, Long> {
-    // Custom repository methods can be declared here
+    boolean existsByProductId_Id(Long productId);
+    void deleteByProductId_Id(Long productId);
 }

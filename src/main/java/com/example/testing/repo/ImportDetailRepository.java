@@ -10,7 +10,9 @@ import java.util.List;
 
 @Repository
 public interface ImportDetailRepository extends JpaRepository<ImportDetail, Long> {
-
     List<ImportDetail> findAllByInvoice(ImportInvoice invoice);
+    boolean existsByProductId(Long productId);
+    void deleteByProductId(Long productId);
+
 }
 

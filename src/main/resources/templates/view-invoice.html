@@ -25,6 +25,7 @@
         }
         .invalid-feedback {
             display: none; /* Hide by default */
+            color: red;
         }
         h2 {
             margin-bottom: 20px;
@@ -41,10 +42,12 @@
                 <div class="col-md-6 mb-3">
                     <label for="startDate">Start Date:</label>
                     <input type="date" class="form-control" id="startDate" name="startDate" required>
+                    <div class="invalid-feedback" id="startDateError">Start date must be before end date.</div>
                 </div>
                 <div class="col-md-6 mb-3">
                     <label for="endDate">End Date:</label>
                     <input type="date" class="form-control" id="endDate" name="endDate" required>
+                    <div class="invalid-feedback" id="endDateError">End date must be after start date.</div>
                 </div>
             </div>
             <div class="text-right">
@@ -60,7 +63,7 @@
                 <th>Invoice ID</th>
                 <th>Date</th>
                 <th class="text-right">Total Imported Products</th>
-                <th class="text-right">Total Import Cost</th>
+                <th class="text-right">Total Import Cost(VND)</th>
                 <th>Action</th>
             </tr>
             </thead>
@@ -68,6 +71,11 @@
             <!-- Invoice rows will be dynamically filled -->
             </tbody>
         </table>
+        <div class="text-right">
+            <a href="/products/index" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Return to Home
+            </a>
+        </div>
     </div>
 </div>
 
@@ -113,10 +121,30 @@
         });
     }
 
-    // Attach search function to form submit
+    function validateDates() {
+        const startDate = new Date(document.getElementById('startDate').value);
+        const endDate = new Date(document.getElementById('endDate').value);
+        const startDateError = document.getElementById('startDateError');
+        const endDateError = document.getElementById('endDateError');
+
+        if (startDate >= endDate) {
+            startDateError.style.display = 'block';
+            endDateError.style.display = 'block';
+            return false;
+        } else {
+            startDateError.style.display = 'none';
+            endDateError.style.display = 'none';
+            return true;
+        }
+    }
+
     document.getElementById('searchInvoicesForm').addEventListener('submit', function(event) {
-        event.preventDefault();
-        searchInvoices();
+        if (!validateDates()) {
+            event.preventDefault();
+        } else {
+            event.preventDefault();
+            searchInvoices();
+        }
     });
 </script>
 </body>

@@ -35,7 +35,7 @@
                     <th>Product</th>
                     <th>Supplier</th>
                     <th class="text-right">Quantity</th>
-                    <th class="text-right">Price</th>
+                    <th class="text-right">Price(VND)</th>
                     <th>Action</th>
                 </tr>
                 </thead>
@@ -46,7 +46,7 @@
                     <td th:text="${item.quantity}" class="text-right"></td>
                     <td th:text="${item.price}" class="text-right"></td>
                     <td>
-                        <form th:action="@{/cart/remove/{id}(id=${item.id})}" method="post">
+                        <form th:action="@{/cart/remove/{id}(id=${item.id})}" method="post" class="remove-item-form">
                             <button type="submit" class="btn btn-danger">
                                 <i class="fas fa-trash-alt"></i> Remove
                             </button>
@@ -57,7 +57,7 @@
             </table>
 
             <div class="text-right">
-                <a href="/cart/finalize" class="btn btn-primary">
+                <a href="/cart/finalize" class="btn btn-primary finalize-cart">
                     <i class="fas fa-check"></i> Finalize Cart
                 </a>
             </div>
@@ -73,5 +73,22 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // Confirmation dialog for removing items
+        $('.remove-item-form').submit(function(event) {
+            if (!confirm("Are you sure you want to remove this item from the cart?")) {
+                event.preventDefault();
+            }
+        });
+
+        // Confirmation dialog for finalizing the cart
+        $('.finalize-cart').click(function(event) {
+            if (!confirm("Are you sure you want to finalize the cart?")) {
+                event.preventDefault();
+            }
+        });
+    });
+</script>
 </body>
 </html>

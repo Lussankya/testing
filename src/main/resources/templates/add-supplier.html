@@ -18,6 +18,10 @@
         h2 {
             margin-bottom: 20px;
         }
+        .form-group .required::after {
+            content: ' *';
+            color: red;
+        }
     </style>
 </head>
 <body>
@@ -29,19 +33,19 @@
         <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
         <form th:action="@{/suppliers/add}" th:object="${supplier}" method="post">
             <div class="form-group">
-                <label for="name">Supplier Name:</label>
+                <label for="name" class="required">Supplier Name:</label>
                 <input type="text" class="form-control" id="name" th:field="*{name}" placeholder="Enter supplier name" required>
             </div>
             <div class="form-group">
-                <label for="contactPerson">Contact Person:</label>
+                <label for="contactPerson" class="required">Contact Person:</label>
                 <input type="text" class="form-control" id="contactPerson" th:field="*{contactPerson}" placeholder="Enter contact person" required>
             </div>
             <div class="form-group">
-                <label for="phone">Phone:</label>
+                <label for="phone" class="required">Phone:</label>
                 <input type="text" class="form-control" id="phone" th:field="*{phone}" placeholder="Enter phone number" required pattern="\d{10}" title="Phone number must be 10 digits">
             </div>
             <div class="form-group">
-                <label for="email">Email:</label>
+                <label for="email" class="required">Email:</label>
                 <input type="email" class="form-control" id="email" th:field="*{email}" placeholder="Enter email address" required>
             </div>
             <div class="text-right">

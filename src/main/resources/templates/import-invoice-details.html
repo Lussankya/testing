@@ -63,7 +63,7 @@
                             <td th:text="${invoice.totalImportedProducts}"></td>
                         </tr>
                         <tr>
-                            <th>Total Import Cost</th>
+                            <th>Total Import Cost(VND)</th>
                             <td th:text="${invoice.totalImportCost}"></td>
                         </tr>
                     </table>
@@ -76,21 +76,21 @@
             <tr>
                 <th>Product</th>
                 <th>Supplier</th>
-                <th>Quantity</th>
-                <th>Price</th>
+                <th class="text-right">Quantity</th>
+                <th class="text-right">Price(VND)</th>
             </tr>
             </thead>
             <tbody>
             <tr th:each="detail : ${details}">
                 <td th:text="${detail.product.name}"></td>
                 <td th:text="${detail.supplier.name}"></td>
-                <td th:text="${detail.quantity}"></td>
-                <td th:text="${detail.price}"></td>
+                <td th:text="${detail.quantity}" class="text-right"></td>
+                <td th:text="${detail.price}" class="text-right"></td>
             </tr>
             </tbody>
         </table>
         <div class="text-right">
-            <a href="/products/index" class="btn btn-primary"><i class="fas fa-arrow-left"></i> Return to Dashboard</a>
+            <a href="/invoices/view-page" class="btn btn-primary"><i class="fas fa-arrow-left"></i> Return to Invoice View</a>
         </div>
     </div>
 </div>
